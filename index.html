@@ -3,75 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elincia Isekai Voyage</title>
+    <title>Supreme King - Shadow Garden</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Quicksand:wght@400;700&display=swap');
+        
         body {
             background: radial-gradient(circle at center, #1a0b2e 0%, #040714 100%);
             color: #e0e7ff;
             font-family: 'Quicksand', sans-serif;
             display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh; padding: 50px 20px; margin: 0;
+            min-height: 100vh; padding: 40px 20px; margin: 0;
         }
+
         .fantasy-title {
             font-family: 'Cinzel Decorative', cursive;
             color: #fcd34d;
-            text-shadow: 0 0 15px rgba(252, 211, 77, 0.6);
-            text-align: center; line-height: 1.2;
+            text-shadow: 0 0 20px rgba(167, 139, 250, 0.8);
+            text-align: center;
         }
+
         .link-card {
-            width: 100%; max-width: 400px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid #6366f1;
+            width: 100%; max-width: 480px;
+            background: rgba(10, 10, 20, 0.9);
+            border: 2px solid #6d28d9;
             padding: 20px; margin: 12px 0; border-radius: 15px;
-            display: flex; align-items: center; gap: 15px;
+            display: flex; flex-direction: column; gap: 10px;
             text-decoration: none; color: white;
             transition: 0.3s;
         }
+
         .link-card:hover {
-            transform: scale(1.05);
-            background: rgba(99, 102, 241, 0.2);
+            transform: scale(1.02);
             border-color: #fcd34d;
+            box-shadow: 0 0 25px rgba(167, 139, 250, 0.4);
         }
-        .icon-box { font-size: 1.8rem; min-width: 40px; text-align: center; }
-        
-        .yt-icon { color: #FF0000; }
-        .tt-icon { color: #00f2ea; }
-        .amz-icon { color: #fcd34d; }
+
+        .yt-name { font-weight: 900; font-size: 1.2rem; color: #fff; }
+        .yt-desc { font-size: 0.85rem; color: #ccc; white-space: pre-line; }
+
+        /* Estilo del Contador */
+        .visitor-counter {
+            margin-top: 30px;
+            padding: 15px;
+            background: rgba(109, 40, 217, 0.15);
+            border-radius: 10px;
+            border: 1px dashed #6d28d9;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-    <div class="mb-10">
-        <h1 class="fantasy-title text-5xl">ELINCIA</h1>
-        <h2 class="fantasy-title text-2xl" style="color: #a78bfa;">ISEKAI VOYAGE</h2>
+
+    <div class="mb-8">
+        <h1 class="fantasy-title text-4xl">Supreme King</h1>
+        <p class="text-center text-purple-400 text-xs tracking-widest mt-1 italic">モルガナ・D・オスクリダ</p>
     </div>
 
-    <a href="https://www.tiktok.com/@elincia_morgana" target="_blank" class="link-card">
-        <div class="icon-box tt-icon"><i class="fab fa-tiktok"></i></div>
-        <div>
-            <p class="font-bold text-lg">TikTok de la Capitana</p>
-            <p class="text-sm text-indigo-300">Nuestros viajes por el portal.</p>
+    <a href="https://www.youtube.com/@DarkMorgana23" target="_blank" class="link-card">
+        <div class="flex items-center gap-3">
+            <i class="fab fa-youtube text-red-600 text-2xl"></i>
+            <p class="yt-name">Supreme King (oscuro)</p>
         </div>
+        <div class="yt-desc text-xs">Tu universo geek en un solo lugar. 🌙 Shadow Garden Member.</div>
     </a>
 
-    <a href="https://www.youtube.com/@DarkMorgana23" target="_blank" class="link-card" style="border-color: rgba(255, 0, 0, 0.4);">
-        <div class="icon-box yt-icon"><i class="fab fa-youtube"></i></div>
-        <div>
-            <p class="font-bold text-lg">YouTube Chronicles</p>
-            <p class="text-sm text-red-300">Vídeos largos y directos de Dark Morgana.</p>
-        </div>
+    <a href="https://www.tiktok.com/@elincia_morgana" target="_blank" class="link-card" style="flex-direction: row; border-color: #a78bfa;">
+        <i class="fab fa-tiktok text-2xl text-purple-400"></i>
+        <span class="font-bold">TikTok Shadow Chronicles</span>
     </a>
 
-    <a href="https://www.amazon.es/hz/wishlist/ls/IHLZMVZV9HPD?ref_=wl_share" target="_blank" class="link-card" style="border-color: #fcd34d; box-shadow: 0 0 15px rgba(252, 211, 77, 0.3);">
-        <div class="icon-box amz-icon"><i class="fas fa-gem"></i></div>
-        <div>
-            <p class="font-bold text-lg">Cofre de Botín Gaming</p>
-            <p class="text-sm text-yellow-200">Inventario legendario para tu setup.</p>
-        </div>
+    <a href="https://www.amazon.es/hz/wishlist/ls/IHLZMVZV9HPD?ref_=wl_share" target="_blank" class="link-card" style="flex-direction: row; border-color: #fcd34d;">
+        <i class="fas fa-gem text-2xl text-yellow-500"></i>
+        <span class="font-bold">Inventario de Poder (Amazon)</span>
     </a>
 
-    <p class="mt-20 text-[10px] uppercase tracking-widest text-indigo-500">© 2026 Elincia Isekai Voyage</p>
+    <div class="visitor-counter">
+        <p class="text-[10px] text-purple-400 uppercase tracking-[3px] mb-2 font-bold">Legión de Sombras Detectada:</p>
+        <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fonepiece102057-ai.github.io%2FMundolinks%2F&count_bg=%236D28D9&title_bg=%231A0B2E&icon=opsgenie.svg&icon_color=%23FCD34D&title=SOLDADOS&edge_flat=false" alt="Visitas"/>
+    </div>
+
+    <p class="mt-10 text-[9px] text-purple-900 font-black tracking-widest uppercase">Shadow Garden Operation</p>
+
 </body>
 </html>
