@@ -3,145 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elincia Isekai Voyage - Enlaces de Poder</title>
+    <title>Elincia Isekai Voyage</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Quicksand:wght@400;600&display=swap');
-
-        /* Fondo: Mar nocturno estrellado (estilo logo) */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Quicksand:wght@400;700&display=swap');
         body {
-            background-color: #040714;
-            background-image: 
-                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 30px),
-                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 20px),
-                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px),
-                linear-gradient(to bottom, #040714 0%, #0c1c3c 100%);
-            background-size: 550px 550px, 350px 350px, 250px 250px, 100% 100%;
-            background-position: 0 0, 40px 60px, 130px 270px, 0 0;
-            font-family: 'Quicksand', sans-serif;
+            background: radial-gradient(circle at center, #1a0b2e 0%, #040714 100%);
             color: #e0e7ff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            padding: 40px 20px;
-            margin: 0;
+            font-family: 'Quicksand', sans-serif;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; padding: 50px 20px; margin: 0;
         }
-
-        /* Títulos estilo Fantasía Épica */
         .fantasy-title {
             font-family: 'Cinzel Decorative', cursive;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #fcd34d; /* Dorado */
-            text-shadow: 0 0 10px rgba(252, 211, 77, 0.7);
-        }
-
-        /* Contenedor del Logo (reemplaza la cara rara) */
-        .logo-container {
-            width: 100%;
-            max-width: 400px; /* Ajusta según el tamaño de tu imagen_1.png */
-            margin-bottom: 30px;
-            filter: drop-shadow(0 0 15px rgba(167, 139, 250, 0.5)); /* Brillo púrpura como el portal */
-        }
-
-        /* Tarjetas de Enlace: Estilo Pergamino Mágico */
-        .link-card {
-            width: 100%;
-            max-width: 420px;
-            background: rgba(17, 24, 39, 0.8); /* Fondo oscuro traslúcido */
-            border: 2px solid #6366f1; /* Borde Índigo/Púrpura como el portal */
-            padding: 18px;
-            margin: 10px 0;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            text-decoration: none;
-            color: white;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Efecto de brillo al pasar el ratón */
-        .link-card:hover {
-            transform: translateY(-3px);
-            border-color: #fcd34d; /* Cambia a dorado */
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
-        }
-
-        /* Brillo legendario (para la tienda) */
-        .legendary-card {
-            border-color: #fcd34d;
-            box-shadow: 0 0 10px rgba(252, 211, 77, 0.4);
-        }
-        .legendary-card:hover {
-            box-shadow: 0 0 25px rgba(252, 211, 77, 0.8);
-        }
-
-        /* Iconos */
-        .icon-box {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            items: center;
-            justify-content: center;
-            background: rgba(99, 102, 241, 0.1);
-            border: 1px solid #6366f1;
-            border-radius: 8px;
-            font-size: 1.5rem;
-            color: #a78bfa; /* Púrpura suave */
-        }
-        .legendary-card .icon-box {
-            border-color: #fcd34d;
             color: #fcd34d;
+            text-shadow: 0 0 15px rgba(252, 211, 77, 0.6);
+            text-align: center; line-height: 1.2;
         }
-
-        .card-title { font-weight: 700; font-size: 1.1rem; color: #fff; }
-        .card-desc { font-size: 0.85rem; color: #94a3b8; }
-
+        .link-card {
+            width: 100%; max-width: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #6366f1;
+            padding: 20px; margin: 12px 0; border-radius: 15px;
+            display: flex; align-items: center; gap: 15px;
+            text-decoration: none; color: white;
+            transition: 0.3s;
+        }
+        .link-card:hover {
+            transform: scale(1.05);
+            background: rgba(99, 102, 241, 0.2);
+            border-color: #fcd34d;
+        }
+        .icon-box { font-size: 1.8rem; min-width: 40px; text-align: center; }
+        
+        .yt-icon { color: #FF0000; }
+        .tt-icon { color: #00f2ea; }
+        .amz-icon { color: #fcd34d; }
     </style>
 </head>
 <body>
-
-    <div class="logo-container text-center">
-        <h1 class="fantasy-title text-4xl md:text-5xl">Elincia</h1>
-        <h2 class="fantasy-title text-xl md:text-2xl text-[#a78bfa] mt-1">Isekai Voyage</h2>
+    <div class="mb-10">
+        <h1 class="fantasy-title text-5xl">ELINCIA</h1>
+        <h2 class="fantasy-title text-2xl" style="color: #a78bfa;">ISEKAI VOYAGE</h2>
     </div>
 
-    <p class="text-sm tracking-widest uppercase mb-10 text-indigo-300 font-bold">Recursos del Gremio de Viajeros</p>
-
     <a href="https://www.tiktok.com/@elincia_morgana" target="_blank" class="link-card">
-        <div class="icon-box">
-            <i class="fab fa-tiktok"></i>
-        </div>
+        <div class="icon-box tt-icon"><i class="fab fa-tiktok"></i></div>
         <div>
-            <span class="card-title fantasy-title" style="color:white; font-family:'Quicksand'">TikTok de la Capitana</span>
-            <p class="card-desc">Vídeos de nuestros viajes por los portales.</p>
+            <p class="font-bold text-lg">TikTok de la Capitana</p>
+            <p class="text-sm text-indigo-300">Nuestros viajes por el portal.</p>
         </div>
     </a>
 
-    <a href="https://www.amazon.es/hz/wishlist/ls/IHLZMVZV9HPD?ref_=wl_share" target="_blank" class="link-card legendary-card">
-        <div class="icon-box">
-            <i class="fas fa-gem"></i> </div>
+    <a href="https://www.youtube.com/@DarkMorgana23" target="_blank" class="link-card" style="border-color: rgba(255, 0, 0, 0.4);">
+        <div class="icon-box yt-icon"><i class="fab fa-youtube"></i></div>
         <div>
-            <span class="card-title fantasy-title">Cofre de Botín Gaming</span>
-            <p class="card-desc">Artefactos legendarios y setups recomendados.</p>
+            <p class="font-bold text-lg">YouTube Chronicles</p>
+            <p class="text-sm text-red-300">Vídeos largos y directos de Dark Morgana.</p>
         </div>
     </a>
 
-    <a href="mailto:TU_CORREO_AQUI@gmail.com" class="link-card">
-        <div class="icon-box">
-            <i class="fas fa-scroll"></i> </div>
+    <a href="https://www.amazon.es/hz/wishlist/ls/IHLZMVZV9HPD?ref_=wl_share" target="_blank" class="link-card" style="border-color: #fcd34d; box-shadow: 0 0 15px rgba(252, 211, 77, 0.3);">
+        <div class="icon-box amz-icon"><i class="fas fa-gem"></i></div>
         <div>
-            <span class="card-title fantasy-title" style="color:white; font-family:'Quicksand'">Misiones / Business</span>
-            <p class="card-desc">Contacto para alianzas y gremios.</p>
+            <p class="font-bold text-lg">Cofre de Botín Gaming</p>
+            <p class="text-sm text-yellow-200">Inventario legendario para tu setup.</p>
         </div>
     </a>
 
-    <p class="mt-16 text-xs text-indigo-900 font-bold uppercase tracking-wider">Powered by Isekai Voyage Engine</p>
-
+    <p class="mt-20 text-[10px] uppercase tracking-widest text-indigo-500">© 2026 Elincia Isekai Voyage</p>
 </body>
 </html>
