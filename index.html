@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cosa Insana - Enlaces Legendarios</title>
+    <title>Elincia Isekai Voyage - Enlaces de Poder</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;900&display=swap');
-        
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Quicksand:wght@400;600&display=swap');
 
+        /* Fondo: Mar nocturno estrellado (estilo logo) */
         body {
-            background: linear-gradient(-45deg, #0c0605, #422016, #1a0f0a, #0c0605);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            font-family: 'Outfit', sans-serif;
-            color: white;
+            background-color: #040714;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 30px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 20px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px),
+                linear-gradient(to bottom, #040714 0%, #0c1c3c 100%);
+            background-size: 550px 550px, 350px 350px, 250px 250px, 100% 100%;
+            background-position: 0 0, 40px 60px, 130px 270px, 0 0;
+            font-family: 'Quicksand', sans-serif;
+            color: #e0e7ff;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -29,90 +29,119 @@
             margin: 0;
         }
 
-        .hero-portrait {
-            width: 130px;
-            height: 130px;
-            border-radius: 50% 50% 15% 15%;
-            border: 6px solid #fcd34d;
-            box-shadow: 0 0 30px rgba(255, 109, 0, 0.6);
-            object-fit: cover;
+        /* Títulos estilo Fantasía Épica */
+        .fantasy-title {
+            font-family: 'Cinzel Decorative', cursive;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fcd34d; /* Dorado */
+            text-shadow: 0 0 10px rgba(252, 211, 77, 0.7);
         }
 
-        @keyframes glowing {
-            0% { border-color: #8d6e63; box-shadow: 0 0 5px #3e2723; }
-            50% { border-color: #fcd34d; box-shadow: 0 0 25px rgba(252, 211, 77, 0.8); }
-            100% { border-color: #8d6e63; box-shadow: 0 0 5px #3e2723; }
+        /* Contenedor del Logo (reemplaza la cara rara) */
+        .logo-container {
+            width: 100%;
+            max-width: 400px; /* Ajusta según el tamaño de tu imagen_1.png */
+            margin-bottom: 30px;
+            filter: drop-shadow(0 0 15px rgba(167, 139, 250, 0.5)); /* Brillo púrpura como el portal */
         }
 
+        /* Tarjetas de Enlace: Estilo Pergamino Mágico */
         .link-card {
             width: 100%;
             max-width: 420px;
-            background: linear-gradient(135deg, #3e2723 0%, #1a0f0a 100%);
-            border: 3px solid #8d6e63;
-            padding: 20px;
-            margin: 12px 0;
-            border-radius: 15px;
+            background: rgba(17, 24, 39, 0.8); /* Fondo oscuro traslúcido */
+            border: 2px solid #6366f1; /* Borde Índigo/Púrpura como el portal */
+            padding: 18px;
+            margin: 10px 0;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             gap: 15px;
             text-decoration: none;
             color: white;
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .legendary {
-            animation: glowing 1.5s infinite;
-            border-width: 4px;
-        }
-
+        /* Efecto de brillo al pasar el ratón */
         .link-card:hover {
-            transform: scale(1.05);
-            border-color: #fcd34d;
+            transform: translateY(-3px);
+            border-color: #fcd34d; /* Cambia a dorado */
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
         }
 
-        .card-title { font-weight: 900; color: #fcd34d; text-transform: uppercase; font-size: 1.1rem; }
-        .card-desc { font-size: 0.8rem; color: #a1a1aa; font-weight: 600; }
-        
-        .tiktok-color { color: #ff0050; border-color: #00f2ea !important; }
+        /* Brillo legendario (para la tienda) */
+        .legendary-card {
+            border-color: #fcd34d;
+            box-shadow: 0 0 10px rgba(252, 211, 77, 0.4);
+        }
+        .legendary-card:hover {
+            box-shadow: 0 0 25px rgba(252, 211, 77, 0.8);
+        }
+
+        /* Iconos */
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            items: center;
+            justify-content: center;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid #6366f1;
+            border-radius: 8px;
+            font-size: 1.5rem;
+            color: #a78bfa; /* Púrpura suave */
+        }
+        .legendary-card .icon-box {
+            border-color: #fcd34d;
+            color: #fcd34d;
+        }
+
+        .card-title { font-weight: 700; font-size: 1.1rem; color: #fff; }
+        .card-desc { font-size: 0.85rem; color: #94a3b8; }
+
     </style>
 </head>
 <body>
 
-    <img src="https://unavatar.io/instagram/cosainsanamemes" class="hero-portrait" alt="Cosa Insana">
-    <h1 class="text-2xl font-black mt-4 text-[#fcd34d] italic uppercase">@COSAINSANAMEMES</h1>
-    <p class="text-[10px] tracking-[4px] uppercase mb-8 text-orange-500 font-bold">Nivel 99 - Gremio de Memes</p>
+    <div class="logo-container text-center">
+        <h1 class="fantasy-title text-4xl md:text-5xl">Elincia</h1>
+        <h2 class="fantasy-title text-xl md:text-2xl text-[#a78bfa] mt-1">Isekai Voyage</h2>
+    </div>
+
+    <p class="text-sm tracking-widest uppercase mb-10 text-indigo-300 font-bold">Recursos del Gremio de Viajeros</p>
 
     <a href="https://www.tiktok.com/@elincia_morgana" target="_blank" class="link-card">
-        <div class="w-12 h-12 flex items-center justify-center bg-[#111] border-2 border-[#ff0050] rounded-lg text-[#00f2ea] text-2xl">
+        <div class="icon-box">
             <i class="fab fa-tiktok"></i>
         </div>
         <div>
-            <span class="card-title" style="color: white;">TikTok Insano 🎬</span>
-            <p class="card-desc">Mira mis últimos vídeos y locuras aquí.</p>
+            <span class="card-title fantasy-title" style="color:white; font-family:'Quicksand'">TikTok de la Capitana</span>
+            <p class="card-desc">Vídeos de nuestros viajes por los portales.</p>
         </div>
     </a>
 
-    <a href="https://www.amazon.es/hz/wishlist/ls/IHLZMVZV9HPD?ref_=wl_share" target="_blank" class="link-card legendary">
-        <div class="w-12 h-12 flex items-center justify-center bg-[#2d1b15] border-2 border-[#fcd34d] rounded-lg text-[#fcd34d] text-2xl">
-            <i class="fas fa-gem"></i>
-        </div>
+    <a href="https://www.amazon.es/hz/wishlist/ls/IHLZMVZV9HPD?ref_=wl_share" target="_blank" class="link-card legendary-card">
+        <div class="icon-box">
+            <i class="fas fa-gem"></i> </div>
         <div>
-            <span class="card-title">Cofre de Botín Gaming 💎</span>
-            <p class="card-desc">Mi lista de deseos con todo el setup recomendado.</p>
+            <span class="card-title fantasy-title">Cofre de Botín Gaming</span>
+            <p class="card-desc">Artefactos legendarios y setups recomendados.</p>
         </div>
     </a>
 
-    <a href="mailto:tu-correo@gmail.com" class="link-card">
-        <div class="w-12 h-12 flex items-center justify-center bg-[#2d1b15] border-2 border-[#8d6e63] rounded-lg text-[#8d6e63] text-2xl">
-            <i class="fas fa-scroll"></i>
-        </div>
+    <a href="mailto:TU_CORREO_AQUI@gmail.com" class="link-card">
+        <div class="icon-box">
+            <i class="fas fa-scroll"></i> </div>
         <div>
-            <span class="card-title">Misiones / Business</span>
-            <p class="card-desc">Contacto para publicidad y marcas.</p>
+            <span class="card-title fantasy-title" style="color:white; font-family:'Quicksand'">Misiones / Business</span>
+            <p class="card-desc">Contacto para alianzas y gremios.</p>
         </div>
     </a>
 
-    <p class="mt-10 text-[8px] text-zinc-600 font-bold uppercase tracking-[3px]">Powered by Cosa Insana Engine</p>
+    <p class="mt-16 text-xs text-indigo-900 font-bold uppercase tracking-wider">Powered by Isekai Voyage Engine</p>
 
 </body>
 </html>
