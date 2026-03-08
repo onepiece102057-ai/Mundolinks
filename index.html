@@ -28,8 +28,8 @@
             width: 100%; max-width: 480px;
             background: rgba(10, 10, 20, 0.9);
             border: 2px solid #6d28d9;
-            padding: 20px; margin: 12px 0; border-radius: 15px;
-            display: flex; flex-direction: column; gap: 10px;
+            padding: 18px; margin: 10px 0; border-radius: 15px;
+            display: flex; flex-direction: column; gap: 8px;
             text-decoration: none; color: white;
             transition: 0.3s;
         }
@@ -40,51 +40,63 @@
             box-shadow: 0 0 25px rgba(167, 139, 250, 0.4);
         }
 
-        .yt-name { font-weight: 900; font-size: 1.2rem; color: #fff; }
-        .yt-desc { font-size: 0.85rem; color: #ccc; white-space: pre-line; }
-
-        /* Estilo del Contador */
-        .visitor-counter {
-            margin-top: 30px;
-            padding: 15px;
-            background: rgba(109, 40, 217, 0.15);
-            border-radius: 10px;
-            border: 1px dashed #6d28d9;
-            text-align: center;
+        /* Estilo para los sub-enlaces */
+        .sub-link {
+            display: inline-block;
+            background: rgba(109, 40, 217, 0.3);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            border: 1px solid #6d28d9;
+            margin-right: 5px;
+            margin-top: 5px;
+            transition: 0.2s;
         }
+        .sub-link:hover { background: #6d28d9; color: #fff; }
+
+        .prime-badge { background: #00A8E1; color: white; border: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="mb-8">
-        <h1 class="fantasy-title text-4xl">Supreme King</h1>
-        <p class="text-center text-purple-400 text-xs tracking-widest mt-1 italic">モルガナ・D・オスクリダ</p>
+        <h1 class="fantasy-title text-4xl uppercase">Supreme King</h1>
+        <p class="text-center text-purple-400 text-[10px] tracking-[4px] mt-1 font-bold italic">SHADOW GARDEN OPERATION</p>
     </div>
 
     <a href="https://www.youtube.com/@DarkMorgana23" target="_blank" class="link-card">
         <div class="flex items-center gap-3">
             <i class="fab fa-youtube text-red-600 text-2xl"></i>
-            <p class="yt-name">Supreme King (oscuro)</p>
+            <span class="font-bold">Supreme King (oscuro)</span>
         </div>
-        <div class="yt-desc text-xs">Tu universo geek en un solo lugar. 🌙 Shadow Garden Member.</div>
+        <p class="text-[11px] text-gray-400">Tu universo geek en un solo lugar. Directos y más.</p>
     </a>
 
-    <a href="https://www.tiktok.com/@elincia_morgana" target="_blank" class="link-card" style="flex-direction: row; border-color: #a78bfa;">
-        <i class="fab fa-tiktok text-2xl text-purple-400"></i>
-        <span class="font-bold">TikTok Shadow Chronicles</span>
-    </a>
-
-    <a href="https://www.amazon.es/hz/wishlist/ls/IHLZMVZV9HPD?ref_=wl_share" target="_blank" class="link-card" style="flex-direction: row; border-color: #fcd34d;">
-        <i class="fas fa-gem text-2xl text-yellow-500"></i>
-        <span class="font-bold">Inventario de Poder (Amazon)</span>
-    </a>
-
-    <div class="visitor-counter">
-        <p class="text-[10px] text-purple-400 uppercase tracking-[3px] mb-2 font-bold">Legión de Sombras Detectada:</p>
-        <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fonepiece102057-ai.github.io%2FMundolinks%2F&count_bg=%236D28D9&title_bg=%231A0B2E&icon=opsgenie.svg&icon_color=%23FCD34D&title=SOLDADOS&edge_flat=false" alt="Visitas"/>
+    <div class="link-card" style="border-color: #fcd34d; background: rgba(20, 10, 30, 0.95);">
+        <div class="flex items-center gap-3 mb-2">
+            <i class="fas fa-wand-magic-sparkles text-yellow-400 text-2xl"></i>
+            <span class="font-bold text-yellow-400">Forja de Artefactos Pro</span>
+        </div>
+        <p class="text-[11px] text-purple-200">Herramientas que uso para crear contenido y música:</p>
+        
+        <div class="flex flex-wrap">
+            <a href="https://suno.com/create" target="_blank" class="sub-link">🎵 Suno (Música IA)</a>
+            <a href="https://sousaku.ai/es" target="_blank" class="sub-link">🎨 Sousaku (Arte IA)</a>
+            <a href="https://www.amazon.es/amazonprime?tag=TU_ID-21" target="_blank" class="sub-link prime-badge">💎 Amazon Prime Free</a>
+        </div>
+        <p class="text-[9px] text-gray-500 mt-2 italic">*Usar estos links apoya directamente al gremio.</p>
     </div>
 
-    <p class="mt-10 text-[9px] text-purple-900 font-black tracking-widest uppercase">Shadow Garden Operation</p>
+    <a href="https://www.tiktok.com/@elincia_morgana" target="_blank" class="link-card">
+        <div class="flex items-center gap-3">
+            <i class="fab fa-tiktok text-purple-400 text-2xl"></i>
+            <span class="font-bold">Shadow Chronicles (TikTok)</span>
+        </div>
+    </a>
+
+    <div class="mt-8 text-center opacity-70 scale-90">
+        <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fonepiece102057-ai.github.io%2FMundolinks%2F&count_bg=%236D28D9&title_bg=%231A0B2E&icon=opsgenie.svg&icon_color=%23FCD34D&title=SOLDADOS&edge_flat=false" alt="Visitas"/>
+    </div>
 
 </body>
 </html>
