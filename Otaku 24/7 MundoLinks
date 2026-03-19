@@ -1,0 +1,345 @@
+import React, { useState, useEffect } from 'react';
+import { initializeApp } from 'firebase/app';
+import { 
+  getFirestore, 
+  doc, 
+  updateDoc, 
+  setDoc,
+  onSnapshot
+} from 'firebase/firestore';
+import { 
+  getAuth, 
+  signInAnonymously, 
+  signInWithCustomToken, 
+  onAuthStateChanged 
+} from 'firebase/auth';
+import { 
+  ExternalLink, 
+  Tv, 
+  Gamepad2, 
+  MessageSquare, 
+  Youtube, 
+  Instagram, 
+  Twitter, 
+  Star, 
+  Copy, 
+  Check,
+  User,
+  Link as LinkIcon,
+  Trash2,
+  Plus,
+  Save,
+  Palette,
+  Layout
+} from 'lucide-react';
+
+// --- CONFIGURACIÓN DE FIREBASE ---
+const firebaseConfig = JSON.parse(window.__firebase_config);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const appId = typeof window.__app_id !== 'undefined' ? window.__app_id : 'mundolinks-otaku-editor';
+
+export default function App() {
+  const [user, setUser] = useState(null);
+  const [activeTab, setActiveTab] = useState('links');
+  const [copySuccess, setCopySuccess] = useState(false);
+  const [profileData, setProfileData] = useState({
+    displayName: 'Shinobi User',
+    bio: 'Explorador del multiverso anime.',
+    notes: '',
+    links: [
+      { id: Date.now(), title: 'Ver One Piece Online', url: 'https://crunchyroll.com', icon: 'Tv', color: 'bg-orange-500' }
+    ]
+  });
+
+  // --- AUTENTICACIÓN ---
+  useEffect(() => {
+    const initAuth = async () => {
+      try {
+        if (typeof window.__initial_auth_token !== 'undefined' && window.__initial_auth_token) {
+          await signInWithCustomToken(auth, window.__initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
+        }
+      } catch (error) {
+        console.error("Error de autenticación:", error);
+      }
+    };
+    initAuth();
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // --- PERSISTENCIA DE DATOS ---
+  useEffect(() => {
+    if (!user) return;
+    const profileRef = doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'info');
+    
+    const unsubscribe = onSnapshot(profileRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setProfileData(prev => ({ ...prev, ...docSnap.data() }));
+      } else {
+        setDoc(profileRef, profileData);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [user]);
+
+  const handleCopy = (text) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    setCopySuccess(true);
+    setTimeout(() => setCopySuccess(false), 2000);
+    document.body.removeChild(textArea);
+  };
+
+  const syncData = async (newData) => {
+    if (!user) return;
+    const profileRef = doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'info');
+    await updateDoc(profileRef, newData);
+  };
+
+  const addLink = () => {
+    const newLink = {
+      id: Date.now(),
+      title: 'Nuevo Enlace',
+      url: 'https://',
+      icon: 'LinkIcon',
+      color: 'bg-blue-500'
+    };
+    const updatedLinks = [...profileData.links, newLink];
+    setProfileData({ ...profileData, links: updatedLinks });
+    syncData({ links: updatedLinks });
+  };
+
+  const removeLink = (id) => {
+    const updatedLinks = profileData.links.filter(l => l.id !== id);
+    setProfileData({ ...profileData, links: updatedLinks });
+    syncData({ links: updatedLinks });
+  };
+
+  const updateLink = (id, field, value) => {
+    const updatedLinks = profileData.links.map(l => l.id === id ? { ...l, [field]: value } : l);
+    setProfileData({ ...profileData, links: updatedLinks });
+    syncData({ links: updatedLinks });
+  };
+
+  const getIcon = (iconName) => {
+    const icons = { Tv, MessageSquare, Youtube, Star, LinkIcon, Instagram, Twitter, Gamepad2 };
+    const IconComp = icons[iconName] || LinkIcon;
+    return <IconComp size={20} />;
+  };
+
+  const COLORS = [
+    'bg-orange-500', 'bg-red-600', 'bg-blue-500', 
+    'bg-purple-600', 'bg-green-500', 'bg-pink-500', 
+    'bg-indigo-600', 'bg-yellow-500', 'bg-gray-700'
+  ];
+
+  const ICONS = ['Tv', 'MessageSquare', 'Youtube', 'Star', 'LinkIcon', 'Instagram', 'Twitter', 'Gamepad2'];
+
+  return (
+    <div className="min-h-screen bg-[#0a0a0a] text-white font-sans selection:bg-[#ff7a00]">
+      
+      {/* FONDO DECORATIVO */}
+      <div className="fixed inset-0 pointer-events-none opacity-20">
+        <div className="absolute top-[-5%] left-[-5%] w-[30%] h-[30%] bg-[#ff7a00] rounded-full blur-[100px]"></div>
+        <div className="absolute bottom-[-5%] right-[-5%] w-[30%] h-[30%] bg-purple-600 rounded-full blur-[100px]"></div>
+      </div>
+
+      <main className="relative z-10 max-w-xl mx-auto px-4 py-10 flex flex-col items-center">
+        
+        {/* HEADER */}
+        <div className="flex flex-col items-center mb-8 text-center">
+          <div className="w-24 h-24 rounded-full bg-gradient-to-tr from-[#ff7a00] to-yellow-400 p-1 mb-4">
+            <div className="w-full h-full rounded-full bg-[#111] flex items-center justify-center text-3xl font-black border-4 border-[#0a0a0a]">
+              {profileData.displayName.charAt(0)}
+            </div>
+          </div>
+          <h1 className="text-2xl font-black tracking-tighter italic uppercase">{profileData.displayName}</h1>
+          <p className="text-gray-500 text-sm mt-1">{profileData.bio}</p>
+        </div>
+
+        {/* NAVEGACIÓN */}
+        <div className="w-full flex bg-[#161616] p-1 rounded-2xl mb-8 border border-white/5 shadow-2xl">
+          {[
+            { id: 'links', label: 'Ver', icon: Layout },
+            { id: 'editor', label: 'Editar', icon: LinkIcon },
+            { id: 'notas', label: 'Notas', icon: MessageSquare },
+            { id: 'perfil', label: 'Perfil', icon: User }
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex-1 flex flex-col items-center gap-1 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${
+                activeTab === tab.id ? 'bg-[#ff7a00] text-black' : 'text-gray-500 hover:text-white'
+              }`}
+            >
+              <tab.icon size={16} />
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* CONTENIDO */}
+        <div className="w-full space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          
+          {/* VISTA PREVIA (LINKS) */}
+          {activeTab === 'links' && (
+            <div className="space-y-3">
+              {profileData.links.map(link => (
+                <a
+                  key={link.id}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-[#161616] hover:bg-[#1f1f1f] border border-white/5 p-3 rounded-2xl flex items-center gap-4 transition-all hover:-translate-y-1 shadow-md"
+                >
+                  <div className={`w-10 h-10 ${link.color} rounded-xl flex items-center justify-center shadow-lg`}>
+                    {getIcon(link.icon)}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-black text-xs uppercase italic">{link.title}</h3>
+                  </div>
+                  <ExternalLink size={14} className="text-gray-600" />
+                </a>
+              ))}
+            </div>
+          )}
+
+          {/* EDITOR DE ENLACES */}
+          {activeTab === 'editor' && (
+            <div className="space-y-6">
+              <button 
+                onClick={addLink}
+                className="w-full py-4 border-2 border-dashed border-white/10 rounded-2xl text-gray-500 font-black text-xs uppercase flex items-center justify-center gap-2 hover:border-[#ff7a00] hover:text-[#ff7a00] transition-all"
+              >
+                <Plus size={16} /> Añadir Nuevo Enlace
+              </button>
+
+              <div className="space-y-4">
+                {profileData.links.map(link => (
+                  <div key={link.id} className="bg-[#161616] p-4 rounded-2xl border border-white/5 space-y-4 shadow-xl">
+                    <div className="flex gap-2">
+                      <input 
+                        className="flex-1 bg-black/40 border border-white/10 rounded-lg p-2 text-xs font-bold outline-none focus:border-[#ff7a00]"
+                        placeholder="Título del enlace"
+                        value={link.title}
+                        onChange={(e) => updateLink(link.id, 'title', e.target.value)}
+                      />
+                      <button 
+                        onClick={() => removeLink(link.id)}
+                        className="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-all"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                    
+                    <input 
+                      className="w-full bg-black/40 border border-white/10 rounded-lg p-2 text-[10px] outline-none focus:border-[#ff7a00]"
+                      placeholder="URL (https://...)"
+                      value={link.url}
+                      onChange={(e) => updateLink(link.id, 'url', e.target.value)}
+                    />
+
+                    <div className="flex flex-wrap gap-2 items-center">
+                      <div className="flex gap-1 bg-black/40 p-1 rounded-lg">
+                        {ICONS.map(iconName => (
+                          <button
+                            key={iconName}
+                            onClick={() => updateLink(link.id, 'icon', iconName)}
+                            className={`p-1.5 rounded-md transition-all ${link.icon === iconName ? 'bg-[#ff7a00] text-black' : 'text-gray-500 hover:text-white'}`}
+                          >
+                            {getIcon(iconName)}
+                          </button>
+                        ))}
+                      </div>
+                      
+                      <div className="flex gap-1 bg-black/40 p-1 rounded-lg">
+                        {COLORS.map(color => (
+                          <button
+                            key={color}
+                            onClick={() => updateLink(link.id, 'color', color)}
+                            className={`w-5 h-5 rounded-md ${color} ${link.color === color ? 'ring-2 ring-white' : 'opacity-50 hover:opacity-100'}`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* NOTAS */}
+          {activeTab === 'notas' && (
+            <div className="bg-[#161616] p-6 rounded-3xl border border-white/5 shadow-2xl">
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Notas Rápidas</span>
+                <button 
+                  onClick={() => handleCopy(profileData.notes)}
+                  className="p-2 bg-[#ff7a00]/10 rounded-lg text-[#ff7a00]"
+                >
+                  {copySuccess ? <Check size={16} /> : <Copy size={16} />}
+                </button>
+              </div>
+              <textarea
+                value={profileData.notes}
+                onChange={(e) => {
+                    const val = e.target.value;
+                    setProfileData({...profileData, notes: val});
+                    syncData({notes: val});
+                }}
+                className="w-full h-64 bg-black/30 rounded-xl p-4 text-sm text-gray-300 outline-none focus:ring-1 ring-[#ff7a00]/30 resize-none font-mono"
+              />
+            </div>
+          )}
+
+          {/* PERFIL */}
+          {activeTab === 'perfil' && (
+            <div className="bg-[#161616] p-6 rounded-3xl border border-white/5 space-y-4 shadow-2xl">
+              <div className="space-y-1">
+                <label className="text-[10px] font-black uppercase text-gray-500 ml-1">Nombre</label>
+                <input 
+                  type="text" 
+                  value={profileData.displayName}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setProfileData({...profileData, displayName: val});
+                    syncData({displayName: val});
+                  }}
+                  className="w-full bg-black/50 border border-white/10 rounded-xl p-3 font-bold outline-none focus:border-[#ff7a00]"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-black uppercase text-gray-500 ml-1">Bio</label>
+                <textarea 
+                  value={profileData.bio}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setProfileData({...profileData, bio: val});
+                    syncData({bio: val});
+                  }}
+                  className="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-sm h-20 outline-none focus:border-[#ff7a00]"
+                />
+              </div>
+            </div>
+          )}
+        </div>
+
+        <footer className="mt-12 text-center opacity-40">
+          <p className="text-[9px] font-black uppercase tracking-[0.3em]">
+            Mundolinks <span className="text-[#ff7a00]">X</span> Otaku24/7
+          </p>
+        </footer>
+      </main>
+    </div>
+  );
+}
