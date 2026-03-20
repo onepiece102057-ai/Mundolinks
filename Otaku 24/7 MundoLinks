@@ -33,7 +33,11 @@ import {
   Camera,
   Settings,
   Save,
-  X
+  X,
+  Instagram,
+  Twitter,
+  Ghost,
+  Sword
 } from 'lucide-react';
 
 // --- CONFIGURACIÓN DE FIREBASE ---
@@ -63,9 +67,36 @@ export default function App() {
       { id: 1, title: 'Mushoku Tensei', rating: '9.2', img: 'https://cdn.myanimelist.net/images/anime/1530/117776.jpg', tags: ['Magia', 'Reencarnación'] },
       { id: 2, title: 'Re:Zero', rating: '8.7', img: 'https://cdn.myanimelist.net/images/anime/11/79410.jpg', tags: ['Psicológico', 'Bucle'] },
       { id: 3, title: 'Overlord', rating: '8.0', img: 'https://cdn.myanimelist.net/images/anime/7/74631.jpg', tags: ['OP MC', 'Fantasía'] },
-      { id: 4, title: 'That Time I Got Reincarnated as a Slime', rating: '8.5', img: 'https://cdn.myanimelist.net/images/anime/1106/94653.jpg', tags: ['Construcción de Reino', 'Slime'] }
+      { id: 4, title: 'Tensura (Slime)', rating: '8.5', img: 'https://cdn.myanimelist.net/images/anime/1106/94653.jpg', tags: ['Construcción', 'Slime'] },
+      { id: 5, title: 'KonoSuba', rating: '8.1', img: 'https://cdn.myanimelist.net/images/anime/8/77831.jpg', tags: ['Comedia', 'Aventura'] },
+      { id: 6, title: 'Shield Hero', rating: '7.9', img: 'https://cdn.myanimelist.net/images/anime/1490/101365.jpg', tags: ['Venganza', 'Isekai'] },
+      { id: 7, title: 'Solo Leveling', rating: '8.6', img: 'https://cdn.myanimelist.net/images/anime/1452/140554.jpg', tags: ['Acción', 'Level Up'] },
+      { id: 8, title: 'The Eminence in Shadow', rating: '8.3', img: 'https://cdn.myanimelist.net/images/anime/1814/128414.jpg', tags: ['Chunibyo', 'OP MC'] },
+      { id: 9, title: 'No Game No Life', rating: '8.1', img: 'https://cdn.myanimelist.net/images/anime/1074/111944.jpg', tags: ['Juegos', 'Estrategia'] },
+      { id: 10, title: 'Gate', rating: '7.7', img: 'https://cdn.myanimelist.net/images/anime/11/75560.jpg', tags: ['Militar', 'Fantasía'] },
+      { id: 11, title: 'Log Horizon', rating: '7.9', img: 'https://cdn.myanimelist.net/images/anime/13/50543.jpg', tags: ['MMORPG', 'Política'] },
+      { id: 12, title: 'Drifters', rating: '7.9', img: 'https://cdn.myanimelist.net/images/anime/6/82103.jpg', tags: ['Guerra', 'Histórico'] }
     ]
   });
+
+  // --- REPARACIÓN DE URL DE YOUTUBE ---
+  const formatYoutubeUrl = (url) => {
+    if (!url) return '';
+    const cleanUrl = url.trim();
+    if (cleanUrl.includes('youtube.com/embed/')) return cleanUrl;
+    let videoId = '';
+    try {
+      if (cleanUrl.includes('youtu.be/')) {
+        videoId = cleanUrl.split('youtu.be/')[1].split(/[?#]/)[0];
+      } else if (cleanUrl.includes('youtube.com/watch')) {
+        const urlObj = new URL(cleanUrl);
+        videoId = urlObj.searchParams.get('v');
+      } else if (cleanUrl.includes('youtube.com/shorts/')) {
+        videoId = cleanUrl.split('youtube.com/shorts/')[1].split(/[?#]/)[0];
+      }
+    } catch (e) { console.warn("Error URL:", e); }
+    return videoId ? `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1` : cleanUrl;
+  };
 
   // --- AUTENTICACIÓN ---
   useEffect(() => {
@@ -76,9 +107,7 @@ export default function App() {
         } else {
           await signInAnonymously(auth);
         }
-      } catch (error) {
-        console.error("Error Auth:", error);
-      }
+      } catch (error) { console.error("Auth:", error); }
     };
     initAuth();
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => setUser(currentUser));
@@ -96,38 +125,22 @@ export default function App() {
       } else {
         setDoc(profileRef, profileData);
       }
-    }, (error) => console.error("Firestore Error:", error));
+    }, (error) => console.error("Firestore:", error));
     return () => unsubscribe();
   }, [user]);
 
   const syncData = async (newData) => {
     if (!user) return;
     const profileRef = doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'info');
-    try {
-      await updateDoc(profileRef, newData);
-    } catch (e) {
-      console.error("Error syncing:", e);
-    }
-  };
-
-  const handleCopy = (text) => {
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-    document.body.appendChild(textArea);
-    textArea.select();
-    document.execCommand('copy');
-    setCopySuccess(true);
-    setTimeout(() => setCopySuccess(false), 2000);
-    document.body.removeChild(textArea);
+    try { await updateDoc(profileRef, newData); } catch (e) { console.error("Sync:", e); }
   };
 
   const getIcon = (iconName, size = 20) => {
-    const icons = { Tv, MessageSquare, Youtube, Star, LinkIcon, Gamepad2, Layout, Flame, User, Settings, Play, Info, Camera, Save, Trash2, Plus, X };
+    const icons = { Tv, MessageSquare, Youtube, Star, LinkIcon, Gamepad2, Layout, Flame, User, Settings, Play, Info, Camera, Save, Trash2, Plus, X, Instagram, Twitter, Ghost, Sword };
     const IconComp = icons[iconName] || LinkIcon;
     return <IconComp size={size} />;
   };
 
-  // --- MANEJADORES DE EDICIÓN ---
   const addLink = () => {
     const newLinks = [...profileData.links, { id: Date.now(), title: 'Nuevo Link', url: 'https://', icon: 'LinkIcon', color: 'bg-gray-700' }];
     setProfileData(prev => ({ ...prev, links: newLinks }));
@@ -149,8 +162,8 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#080808] text-white font-sans selection:bg-[#ff7a00]">
       
-      {/* NAVEGACIÓN PRINCIPAL */}
-      <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#121212]/80 backdrop-blur-xl border border-white/10 p-2 rounded-2xl flex gap-2 shadow-2xl">
+      {/* NAVEGACIÓN */}
+      <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#121212]/80 backdrop-blur-xl border border-white/10 p-2 rounded-2xl flex gap-1 md:gap-2 shadow-2xl">
         {[
           { id: 'links', icon: 'Layout', label: 'Portal' },
           { id: 'isekai', icon: 'Flame', label: 'Isekais' },
@@ -160,7 +173,7 @@ export default function App() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all ${
+            className={`flex items-center gap-2 px-3 md:px-4 py-2 rounded-xl transition-all ${
               activeTab === tab.id ? 'bg-[#ff7a00] text-black font-black' : 'text-gray-500 hover:text-white'
             }`}
           >
@@ -172,17 +185,15 @@ export default function App() {
 
       <div className="pb-24">
         
-        {/* PORTAL DE ENLACES */}
+        {/* VISTA: PORTAL */}
         {activeTab === 'links' && (
           <div className="max-w-xl mx-auto px-4 py-12 animate-in fade-in duration-500">
             <div className="flex flex-col items-center text-center mb-10">
-              <div className="w-24 h-24 rounded-full border-4 border-[#ff7a00] p-1 mb-4 shadow-[0_0_20px_rgba(255,122,0,0.3)] overflow-hidden">
+              <div className="w-24 h-24 rounded-full border-4 border-[#ff7a00] p-1 mb-4 shadow-[0_0_20px_rgba(255,122,0,0.3)] overflow-hidden bg-[#111]">
                 {profileData.avatarUrl ? (
-                  <img src={profileData.avatarUrl} className="w-full h-full object-cover rounded-full" />
+                  <img src={profileData.avatarUrl} className="w-full h-full object-cover rounded-full" alt="Avatar" />
                 ) : (
-                  <div className="w-full h-full rounded-full bg-[#111] flex items-center justify-center text-3xl font-black">
-                    {profileData.displayName.charAt(0)}
-                  </div>
+                  <div className="w-full h-full flex items-center justify-center text-3xl font-black">{profileData.displayName.charAt(0)}</div>
                 )}
               </div>
               <h1 className="text-3xl font-black italic uppercase tracking-tighter">{profileData.displayName}</h1>
@@ -196,12 +207,12 @@ export default function App() {
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group w-full bg-[#121212] hover:bg-[#181818] border border-white/5 p-4 rounded-2xl flex items-center gap-4 transition-all hover:scale-[1.02] shadow-lg"
+                  className="group w-full bg-[#121212] hover:bg-[#181818] border border-white/5 p-4 rounded-2xl flex items-center gap-4 transition-all hover:scale-[1.01] shadow-lg"
                 >
                   <div className={`w-12 h-12 ${link.color} rounded-xl flex items-center justify-center shadow-lg group-hover:rotate-6 transition-transform text-white`}>
                     {getIcon(link.icon)}
                   </div>
-                  <span className="flex-1 font-black text-sm uppercase italic">{link.title}</span>
+                  <span className="flex-1 font-black text-sm uppercase italic text-left">{link.title}</span>
                   <ExternalLink size={16} className="text-gray-600 group-hover:text-[#ff7a00]" />
                 </a>
               ))}
@@ -209,38 +220,46 @@ export default function App() {
           </div>
         )}
 
-        {/* LISTA ISEKAI */}
+        {/* VISTA: ISEKAI (EXPANDIDA) */}
         {activeTab === 'isekai' && (
-          <div className="max-w-4xl mx-auto px-6 py-12 animate-in slide-in-from-right-4 duration-500">
-            <div className="flex items-center gap-3 mb-8">
-              <Flame className="text-[#ff7a00]" size={32} />
-              <h2 className="text-4xl font-black italic uppercase tracking-tighter">Isekai Central</h2>
+          <div className="max-w-5xl mx-auto px-6 py-12 animate-in slide-in-from-right-4 duration-500">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-3">
+                <Flame className="text-[#ff7a00]" size={32} />
+                <h2 className="text-3xl md:text-4xl font-black italic uppercase tracking-tighter">Isekai Central</h2>
+              </div>
+              <div className="hidden md:block text-[10px] font-black text-gray-500 uppercase tracking-widest bg-white/5 px-4 py-2 rounded-full">
+                {profileData.isekaiList.length} Títulos en Biblioteca
+              </div>
             </div>
             
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {profileData.isekaiList.map(anime => (
-                <div key={anime.id} className="bg-[#121212] rounded-2xl overflow-hidden border border-white/5 group">
+                <div key={anime.id} className="bg-[#121212] rounded-xl overflow-hidden border border-white/5 group hover:border-[#ff7a00]/30 transition-all flex flex-col">
                   <div className="relative aspect-[2/3] overflow-hidden">
-                    <img src={anime.img} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt={anime.title} />
-                    <div className="absolute top-2 right-2 bg-black/80 backdrop-blur-md px-2 py-1 rounded-lg flex items-center gap-1 text-[10px] font-black text-[#ff7a00]">
-                      <Star size={10} fill="currentColor" /> {anime.rating}
+                    <img src={anime.img} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={anime.title} />
+                    <div className="absolute top-2 right-2 bg-black/80 backdrop-blur-md px-1.5 py-0.5 rounded-lg flex items-center gap-1 text-[9px] font-black text-[#ff7a00]">
+                      <Star size={8} fill="currentColor" /> {anime.rating}
                     </div>
                   </div>
-                  <div className="p-4">
-                    <h3 className="font-black text-xs uppercase line-clamp-1 italic">{anime.title}</h3>
-                    <div className="flex flex-wrap gap-1 mt-2">
-                      {anime.tags.map(tag => (
-                        <span key={tag} className="text-[8px] bg-white/5 px-2 py-0.5 rounded text-gray-400 uppercase font-bold">{tag}</span>
+                  <div className="p-3 text-left flex-1 flex flex-col justify-between">
+                    <h3 className="font-black text-[10px] uppercase line-clamp-2 italic leading-tight mb-2 min-h-[2.4em]">{anime.title}</h3>
+                    <div className="flex flex-wrap gap-1">
+                      {anime.tags.slice(0, 2).map(tag => (
+                        <span key={tag} className="text-[7px] bg-white/5 px-1.5 py-0.5 rounded text-gray-500 uppercase font-bold tracking-tighter">{tag}</span>
                       ))}
                     </div>
                   </div>
                 </div>
               ))}
             </div>
+            <div className="mt-12 bg-[#121212] p-8 rounded-3xl border border-dashed border-white/10 text-center">
+              <p className="text-gray-500 text-sm font-bold italic uppercase tracking-widest">¿Viste algo que falta? Agrégalo en Ajustes</p>
+            </div>
           </div>
         )}
 
-        {/* PERFIL PRO */}
+        {/* VISTA: PERFIL */}
         {activeTab === 'perfil' && (
           <div className="animate-in fade-in duration-500">
             <div className="relative h-48 md:h-64 overflow-hidden bg-gray-800">
@@ -252,11 +271,9 @@ export default function App() {
               <div className="flex flex-col md:flex-row items-center md:items-end gap-6 mb-10">
                 <div className="w-32 h-32 rounded-3xl bg-[#111] border-4 border-[#080808] overflow-hidden shadow-2xl">
                   {profileData.avatarUrl ? (
-                    <img src={profileData.avatarUrl} className="w-full h-full object-cover" />
+                    <img src={profileData.avatarUrl} className="w-full h-full object-cover" alt="Avatar" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-5xl font-black text-[#ff7a00]">
-                      {profileData.displayName.charAt(0)}
-                    </div>
+                    <div className="w-full h-full flex items-center justify-center text-5xl font-black text-[#ff7a00]">{profileData.displayName.charAt(0)}</div>
                   )}
                 </div>
                 <div className="flex-1 text-center md:text-left pb-2">
@@ -265,32 +282,36 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
                 <div className="md:col-span-2 space-y-6">
-                  <div className="bg-[#121212] p-6 rounded-3xl border border-white/5 text-left">
+                  <div className="bg-[#121212] p-6 rounded-3xl border border-white/5 shadow-xl">
                     <h4 className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-4">Información del Guerrero</h4>
                     <p className="text-gray-300 leading-relaxed font-medium whitespace-pre-wrap">{profileData.bio}</p>
                   </div>
 
-                  <div className="bg-[#121212] p-6 rounded-3xl border border-white/5 overflow-hidden text-left">
+                  <div className="bg-[#121212] p-6 rounded-3xl border border-white/5 overflow-hidden shadow-xl">
                     <h4 className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                       <Play size={14} className="text-[#ff7a00]" /> Tráiler del Personaje
                     </h4>
-                    <div className="aspect-video rounded-2xl overflow-hidden bg-black shadow-inner">
-                      <iframe 
-                        className="w-full h-full"
-                        src={profileData.videoUrl} 
-                        title="Video player" 
-                        frameBorder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowFullScreen
-                      ></iframe>
+                    <div className="aspect-video rounded-2xl overflow-hidden bg-black shadow-inner flex items-center justify-center">
+                      {profileData.videoUrl ? (
+                        <iframe 
+                          className="w-full h-full"
+                          src={formatYoutubeUrl(profileData.videoUrl)} 
+                          title="Video Trailer" 
+                          frameBorder="0" 
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                          allowFullScreen
+                        ></iframe>
+                      ) : (
+                        <div className="text-gray-700 font-black italic">SISTEMA OFFLINE</div>
+                      )}
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-6">
-                  <div className="bg-gradient-to-br from-[#ff7a00] to-orange-800 p-6 rounded-3xl text-black text-left">
+                  <div className="bg-gradient-to-br from-[#ff7a00] to-orange-800 p-6 rounded-3xl text-black shadow-lg shadow-orange-900/20">
                     <h4 className="font-black uppercase text-[10px] tracking-widest opacity-70">Poder Total</h4>
                     <p className="text-3xl font-black italic">894,200</p>
                     <div className="h-1 bg-black/20 mt-4 rounded-full overflow-hidden">
@@ -298,15 +319,9 @@ export default function App() {
                     </div>
                   </div>
                   
-                  <div className="bg-[#121212] p-6 rounded-3xl border border-white/5 text-left">
+                  <div className="bg-[#121212] p-6 rounded-3xl border border-white/5 shadow-xl">
                     <h4 className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-4">Notas Ninja</h4>
-                    <p className="text-xs text-gray-400 line-clamp-6 italic whitespace-pre-wrap">{profileData.notes || 'Sin pergaminos guardados...'}</p>
-                    <button 
-                        onClick={() => setActiveTab('ajustes')}
-                        className="mt-4 text-[10px] font-black text-[#ff7a00] uppercase hover:underline"
-                    >
-                        Editar Notas
-                    </button>
+                    <p className="text-xs text-gray-400 line-clamp-6 italic whitespace-pre-wrap">{profileData.notes || 'El pergamino está vacío...'}</p>
                   </div>
                 </div>
               </div>
@@ -314,15 +329,14 @@ export default function App() {
           </div>
         )}
 
-        {/* AJUSTES */}
+        {/* VISTA: AJUSTES */}
         {activeTab === 'ajustes' && (
           <div className="max-w-2xl mx-auto px-6 py-12 animate-in zoom-in-95 duration-300 text-left">
             <h2 className="text-3xl font-black uppercase italic mb-8 border-b-2 border-[#ff7a00] pb-2 inline-block">Forja de Datos</h2>
             
             <div className="space-y-8">
-              {/* Info General */}
               <section className="bg-[#121212] p-6 rounded-3xl border border-white/5 space-y-4 shadow-xl">
-                <h3 className="text-xs font-black uppercase text-[#ff7a00] tracking-widest mb-2">Identidad</h3>
+                <h3 className="text-xs font-black uppercase text-[#ff7a00] tracking-widest mb-2">Identidad y Multimedia</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-[10px] font-black uppercase text-gray-600">Nombre</label>
@@ -337,7 +351,7 @@ export default function App() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-gray-600">URL Foto Perfil</label>
+                    <label className="text-[10px] font-black uppercase text-gray-600">Foto de Perfil (URL)</label>
                     <input 
                       value={profileData.avatarUrl}
                       onChange={(e) => {
@@ -350,20 +364,20 @@ export default function App() {
                   </div>
                 </div>
                 <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-gray-600">Bio / Descripción</label>
-                    <textarea 
-                      value={profileData.bio}
+                    <label className="text-[10px] font-black uppercase text-gray-600">Link de YouTube (Tráiler)</label>
+                    <input 
+                      placeholder="Pega el enlace de YouTube..."
+                      value={profileData.videoUrl}
                       onChange={(e) => {
                         const val = e.target.value;
-                        setProfileData(p => ({...p, bio: val}));
-                        syncData({bio: val});
+                        setProfileData(p => ({...p, videoUrl: val}));
+                        syncData({videoUrl: val});
                       }}
-                      className="w-full bg-black/40 border border-white/5 rounded-xl p-3 text-sm h-24 outline-none focus:border-[#ff7a00]"
+                      className="w-full bg-black/40 border border-white/5 rounded-xl p-3 text-xs outline-none focus:border-[#ff7a00]"
                     />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-gray-600">URL Banner</label>
+                <div className="space-y-1">
+                    <label className="text-[10px] font-black uppercase text-gray-600">Banner (URL)</label>
                     <input 
                       value={profileData.bannerUrl}
                       onChange={(e) => {
@@ -373,43 +387,23 @@ export default function App() {
                       }}
                       className="w-full bg-black/40 border border-white/5 rounded-xl p-3 text-xs outline-none focus:border-[#ff7a00]"
                     />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-black uppercase text-gray-600">YouTube Embed URL</label>
-                    <input 
-                      value={profileData.videoUrl}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        setProfileData(p => ({...p, videoUrl: val}));
-                        syncData({videoUrl: val});
-                      }}
-                      className="w-full bg-black/40 border border-white/5 rounded-xl p-3 text-xs outline-none focus:border-[#ff7a00]"
-                    />
-                  </div>
                 </div>
               </section>
 
-              {/* Editor de Enlaces */}
-              <section className="bg-[#121212] p-6 rounded-3xl border border-white/5 space-y-4">
+              <section className="bg-[#121212] p-6 rounded-3xl border border-white/5 space-y-4 shadow-xl">
                 <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-xs font-black uppercase text-[#ff7a00] tracking-widest">Gestionar Enlaces</h3>
+                  <h3 className="text-xs font-black uppercase text-[#ff7a00] tracking-widest">Botones del Portal</h3>
                   <button onClick={addLink} className="flex items-center gap-1 text-[10px] font-black bg-[#ff7a00] text-black px-3 py-1 rounded-full uppercase">
-                    <Plus size={12} /> Añadir
+                    <Plus size={12} /> Nuevo
                   </button>
                 </div>
                 <div className="space-y-3">
                   {profileData.links.map(link => (
                     <div key={link.id} className="bg-black/40 border border-white/5 p-4 rounded-2xl flex flex-col gap-3 relative">
-                      <button 
-                        onClick={() => deleteLink(link.id)}
-                        className="absolute top-4 right-4 text-red-500 hover:text-red-400"
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                      <button onClick={() => deleteLink(link.id)} className="absolute top-4 right-4 text-red-500 hover:scale-110 transition-transform"><Trash2 size={16} /></button>
                       <div className="grid grid-cols-2 gap-2 mr-8">
                         <input 
                           value={link.title}
-                          placeholder="Título"
                           onChange={(e) => updateLinkDetail(link.id, 'title', e.target.value)}
                           className="bg-white/5 border border-white/10 p-2 rounded-lg text-xs font-bold outline-none"
                         />
@@ -418,14 +412,13 @@ export default function App() {
                           onChange={(e) => updateLinkDetail(link.id, 'icon', e.target.value)}
                           className="bg-white/5 border border-white/10 p-2 rounded-lg text-xs outline-none"
                         >
-                          {['LinkIcon', 'Youtube', 'Gamepad2', 'Tv', 'MessageSquare', 'Star', 'Instagram', 'Twitter'].map(ic => (
+                          {['LinkIcon', 'Youtube', 'Gamepad2', 'Tv', 'MessageSquare', 'Star', 'Instagram', 'Twitter', 'Ghost', 'Sword'].map(ic => (
                             <option key={ic} value={ic}>{ic}</option>
                           ))}
                         </select>
                       </div>
                       <input 
                         value={link.url}
-                        placeholder="URL (https://...)"
                         onChange={(e) => updateLinkDetail(link.id, 'url', e.target.value)}
                         className="bg-white/5 border border-white/10 p-2 rounded-lg text-[10px] outline-none"
                       />
@@ -434,31 +427,11 @@ export default function App() {
                 </div>
               </section>
 
-              {/* Notas */}
-              <section className="bg-[#121212] p-6 rounded-3xl border border-white/5">
-                <div className="flex justify-between items-center mb-4">
-                    <label className="text-[10px] font-black uppercase text-gray-600">Pergamino de Notas</label>
-                    <button onClick={() => handleCopy(profileData.notes)} className="text-[#ff7a00] p-1">
-                        {copySuccess ? <Check size={16} /> : <Copy size={16} />}
-                    </button>
-                </div>
-                <textarea 
-                    value={profileData.notes}
-                    onChange={(e) => {
-                        const val = e.target.value;
-                        setProfileData(p => ({...p, notes: val}));
-                        syncData({notes: val});
-                    }}
-                    className="w-full bg-black/40 border border-white/5 rounded-2xl p-4 h-32 text-sm outline-none focus:border-[#ff7a00] resize-none font-mono"
-                    placeholder="Escribe aquí tus planes de conquista..."
-                />
-              </section>
-
               <button 
-                onClick={() => setActiveTab('links')}
-                className="w-full py-4 bg-[#ff7a00] text-black font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-[#ff7a00]/20 flex items-center justify-center gap-2"
+                onClick={() => setActiveTab('perfil')}
+                className="w-full py-4 bg-[#ff7a00] text-black font-black uppercase tracking-widest rounded-2xl shadow-lg flex items-center justify-center gap-2 hover:bg-[#ff8a20] transition-transform"
               >
-                {getIcon('Save', 20)} Finalizar Edición
+                {getIcon('Check', 20)} Guardar Cambios
               </button>
             </div>
           </div>
@@ -467,7 +440,7 @@ export default function App() {
       </div>
 
       <footer className="text-center opacity-30 py-8">
-        <p className="text-[9px] font-black uppercase tracking-[0.4em]">SISTEMA MULTIVERSO V2.1</p>
+        <p className="text-[9px] font-black uppercase tracking-[0.4em]">SISTEMA MULTIVERSO V2.4 - ISEKAI LIBRARY UPDATE</p>
       </footer>
     </div>
   );
